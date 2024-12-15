@@ -109,6 +109,14 @@ void dequeue(struct Queue *q) {
     q->size--;
 }
 
+void clearScreen() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
 int main() {
     struct Queue playlist;
     initQueue(&playlist);
@@ -117,13 +125,23 @@ int main() {
     int duration;
 
     while (1) {
-        printf("\n=== Menu Playlist Musik ===\n");
-        printf("1. Tambah Lagu\n");
-        printf("2. Putar Lagu Berikutnya\n");
-        printf("3. Tampilkan Playlist\n");
-        printf("4. Hapus Lagu\n");
-        printf("5. Keluar\n");
-        printf("Pilihan Anda: ");
+        clearScreen();
+        printf("\n================== BY KELOMPOK 9 | 2024 ================\n");
+        printf("\n1. MUHAMMAD BAGUS SATRIO AJI 23081010258              |\n");
+        printf("\n2. AKHMAD AZRUL ARSYADHANY   23081010281              |\n");
+        printf("\n3. MUCHAMAD AKBAR DARMAWAN   23081010289              |\n");
+        printf("\n4. ARGANTA BISMA PRATAMA     23081010291              |\n");
+        printf("\n5. MUHAMMAD TRIAJI SUPANDI   23081010307              |\n");
+        printf("\n================= PLAYLIST MUSIC =======================\n");
+
+        printf("1. Tambah Lagu                                         |\n");
+        printf("2. Putar Lagu Berikutnya                               |\n");
+        printf("3. Tampilkan Playlist                                  |\n");
+        printf("4. Hapus Lagu                                          |\n");
+        printf("5. Keluar                                              |\n");
+        printf("Masukkan Pilihan Anda:                                 |");
+
+        printf("\n========================================================\n");
 
         if (scanf("%d", &choice) != 1) {
             printf("\nInput tidak valid! Masukkan angka.\n");
@@ -135,6 +153,7 @@ int main() {
 
         switch (choice) {
             case 1:
+                clearScreen();
                 printf("\nMasukkan judul lagu: ");
                 fgets(title, sizeof(title), stdin);
                 title[strcspn(title, "\n")] = 0;
@@ -154,23 +173,32 @@ int main() {
                 break;
 
             case 2:
+                clearScreen();
                 playNext(&playlist);
+                break;
 
             case 3:
+                clearScreen();
                 displayPlaylist(&playlist);
                 break;
 
             case 4:
+                clearScreen();
                 dequeue(&playlist);
                 break;
 
             case 5:
+                clearScreen();
                 printf("\nTerima kasih telah menggunakan program playlist musik!\n");
                 exit(0);
 
             default:
+                clearScreen();
                 printf("\nPilihan tidak valid!\n");
         }
+
+        printf("\nTekan ENTER untuk melanjutkan...");
+        getchar();
     }
 
     return 0;
