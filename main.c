@@ -6,7 +6,7 @@
 struct Song {
     char title[100];
     char artist[100];
-    int duration; // dalam detik
+    int duration; // dalam menit
     struct Song *next;
 };
 
@@ -184,7 +184,7 @@ int main() {
                 fgets(artist, sizeof(artist), stdin);
                 artist[strcspn(artist, "\n")] = 0;
 
-                printf("Masukkan durasi (detik): ");
+                printf("Masukkan durasi (menit): ");
                 if (scanf("%d", &duration) != 1) {
                     printf("\nInput tidak valid untuk durasi!\n");
                     while (getchar() != '\n'); // Membersihkan buffer
