@@ -58,7 +58,7 @@ void playNext(struct Queue *q) {
 
     printf("\nMemutar lagu: %s\n", q->front->title);
     printf("Artis: %s\n", q->front->artist);
-    printf("Durasi: %d detik\n", q->front->duration);
+    printf("Durasi: %d menit\n", q->front->duration);
 
     // Rotate the queue
     q->rear = q->front;
@@ -79,7 +79,7 @@ void displayPlaylist(struct Queue *q) {
     do {
         printf("\n%d. Judul: %s", count, current->title);
         printf("\n   Artis: %s", current->artist);
-        printf("\n   Durasi: %d detik", current->duration);
+        printf("\n   Durasi: %d menit", current->duration);
         current = current->next;
         count++;
     } while (current != q->front);
@@ -87,26 +87,49 @@ void displayPlaylist(struct Queue *q) {
     printf("\n\nTotal lagu: %d\n", q->size);
 }
 
-// Fungsi untuk menghapus lagu dari playlist
-void dequeue(struct Queue *q) {
+// Fungsi untuk menghapus lagu berdasarkan judul
+void removeSongByTitle(struct Queue *q, const char *title) {
     if (q->size == 0) {
         printf("\nPlaylist kosong!\n");
         return;
     }
 
-    struct Song *temp = q->front;
-    printf("\nMenghapus lagu '%s' dari playlist\n", temp->title);
+    struct Song *current = q->front;
+    struct Song *prev = q->rear;
+    int found = 0;
 
-    if (q->size == 1) {
-        q->front = NULL;
-        q->rear = NULL;
-    } else {
-        q->front = q->front->next;
-        q->rear->next = q->front;
+    for (int i = 0; i < q->size; i++) {
+        if (strcmp(current->title, title) == 0) {
+            found = 1;
+            if (current == q->front) {
+                struct Song *temp = q->front;
+                if (q->size == 1) {
+                    q->front = NULL;
+                    q->rear = NULL;
+                } else {
+                    q->front = q->front->next;
+                    q->rear->next = q->front;
+                }
+                free(temp);
+                q->size--;
+            } else {
+                prev->next = current->next;
+                if (current == q->rear) {
+                    q->rear = prev;
+                }
+                free(current);
+                q->size--;
+            }
+            printf("\nLagu '%s' telah dihapus dari playlist!\n", title);
+            break;
+        }
+        prev = current;
+        current = current->next;
     }
 
-    free(temp);
-    q->size--;
+    if (!found) {
+        printf("\nLagu dengan judul '%s' tidak ditemukan di playlist!\n", title);
+    }
 }
 
 void clearScreen() {
@@ -126,22 +149,21 @@ int main() {
 
     while (1) {
         clearScreen();
-        printf("\n================== BY KELOMPOK 9 | 2024 ================\n");
-        printf("\n1. MUHAMMAD BAGUS SATRIO AJI 23081010258              |\n");
-        printf("\n2. AKHMAD AZRUL ARSYADHANY   23081010281              |\n");
-        printf("\n3. MUCHAMAD AKBAR DARMAWAN   23081010289              |\n");
-        printf("\n4. ARGANTA BISMA PRATAMA     23081010291              |\n");
-        printf("\n5. MUHAMMAD TRIAJI SUPANDI   23081010307              |\n");
-        printf("\n================= PLAYLIST MUSIC =======================\n");
+        printf("\n================== BY KELOMPOK 9 | 2024 =================\n");
+        printf("| 1. MUHAMMAD BAGUS SATRIO AJI 23081010258              |\n");
+        printf("| 2. AKHMAD AZRUL ARSYADHANY   23081010281              |\n");
+        printf("| 3. MUCHAMAD AKBAR DARMAWAN   23081010289              |\n");
+        printf("| 4. ARGANTA BISMA PRATAMA     23081010291              |\n");
+        printf("| 5. MUHAMMAD TRIAJI SUPANDI   23081010307              |\n");
+        printf("================= PLAYLIST MUSIC ========================\n");
 
-        printf("1. Tambah Lagu                                         |\n");
-        printf("2. Putar Lagu Berikutnya                               |\n");
-        printf("3. Tampilkan Playlist                                  |\n");
-        printf("4. Hapus Lagu                                          |\n");
-        printf("5. Keluar                                              |\n");
-        printf("Masukkan Pilihan Anda:                                 |");
-
-        printf("\n========================================================\n");
+        printf("| 1. Tambah Lagu                                        |\n");
+        printf("| 2. Putar Lagu Berikutnya                              |\n");
+        printf("| 3. Tampilkan Playlist                                 |\n");
+        printf("| 4. Hapus Lagu Berdasarkan Judul                       |\n");
+        printf("| 5. Keluar                                             |\n");
+        printf("| Masukkan Pilihan Anda:                                |");
+        printf("\n=========================================================\n");
 
         if (scanf("%d", &choice) != 1) {
             printf("\nInput tidak valid! Masukkan angka.\n");
@@ -184,7 +206,10 @@ int main() {
 
             case 4:
                 clearScreen();
-                dequeue(&playlist);
+                printf("\nMasukkan judul lagu yang ingin dihapus: ");
+                fgets(title, sizeof(title), stdin);
+                title[strcspn(title, "\n")] = 0;
+                removeSongByTitle(&playlist, title);
                 break;
 
             case 5:
